@@ -1,6 +1,7 @@
 package com.ordermanagement.controller;
 
 import com.ordermanagement.entity.Customer;
+import com.ordermanagement.exception.ResourceNotFoundException;
 import com.ordermanagement.service.CustomerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +28,17 @@ public class CustomerController {
     }
     @PutMapping("/{id}")
     public Customer updateCustomer(@PathVariable Long id, @RequestBody Customer customer) {
-        return customerService.updateCustomer(id, customer);
+        Customer updatedCustomer = customerService.updateCustomer(id, customer);
+        if (customer == null) {
+            throw new ResourceNotFoundException("Customer not found with id: " + id);
+        }
+        return updatedCustomer;
+    }
+
+    @GetMapping("/product/{productName}")
+    public ResponseEntity<List<String>> findCustomerByProductName(@PathVariable String productName) {
+        List<String> customers = customerService.findCustomerByProductName(productName);
+        return ResponseEntity.ok(customers);
     }
 }
 

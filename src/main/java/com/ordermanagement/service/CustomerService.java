@@ -31,4 +31,11 @@ public class CustomerService {
             return customerRepository.save(customer);
         }).orElseThrow(() -> new ResourceNotFoundException("Customer not found with id: " + customerId));
     }
+    public List<String> findCustomerByProductName(String productName) {
+        List<String> customerNames = customerRepository.findCustomerByProductName(productName);
+        if (customerNames.isEmpty()) {
+            throw new ResourceNotFoundException("No customers found for product: " + productName);
+        }
+        return customerNames;
+    }
 }
